@@ -21,26 +21,42 @@ async function verileriYukle(){
   console.log(veri);
 
   veri.forEach(eleman => {
-    const yeni=document.createElement("option");
-    aramaListesi.appendChild(yeni);
-    yeni.value=eleman.anahtar;
-    anahtarKelimeler.push(yeni);
+    anahtarKelimeler.push(eleman.anahtar);
     sozler.push(eleman.sozum);
   })
+
+
+const birlesmisKelimeler = [...new Set(anahtarKelimeler)];
+console.log(birlesmisKelimeler);
+
+let sayac=0;
+birlesmisKelimeler.sort(() => Math.random() - 0.5);
+birlesmisKelimeler.forEach(kelime => {
+  if(sayac<5){
+    const yeni=document.createElement("option");
+    aramaListesi.appendChild(yeni);
+    yeni.value=kelime;
+    }
+    sayac++;
+})
 }
 
 aramaKutusu.addEventListener("input",(e) => sonuclariAra(e.target.value));
 
 function sonuclariAra(arananKelime){
   sonuc.innerHTML="";
+  let aramaKurali = new RegExp(arananKelime, 'gi');
+  let eslesenler=sozler.filter(soz => aramaKurali.test(soz));
+  
+  if(arananKelime.length < 3){
+    eslesenler=[];
+  }
 
-  sozler.forEach(soz => {
-    if(soz.includes(arananKelime)){
-      sonuc.innerHTML=soz;
-      sonuc.classList.remove("sakla");
-    }
-    else{
-      sonuc.classList.add("sakla");
-    }
+  eslesenler.forEach(es => {
+    
+    const siradakiSonuc=document.createElement("li");
+    sonuc.appendChild(siradakiSonuc);
+    siradakiSonuc.innerHTML=es;
+  
   })
 }
